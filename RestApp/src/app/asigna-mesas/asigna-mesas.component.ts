@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import interact from 'interactjs';
 import Swal from 'sweetalert2';
+import { MesasControllerService } from '../Services/mesas-controller.service';
 
 @Component({
   selector: 'app-asigna-mesas',
@@ -12,16 +13,17 @@ export class AsignaMesasComponent implements OnInit {
   public heightDiv = (screen.height - 145) + 'px';
   public value = 0 ;
   public arr = [];
+  public posXm;
+  public posYm;
+  public SizeX;
+  public SizeY;
+  public bRadius;
 
-  constructor() { }
+  constructor( public data: MesasControllerService ) { }
 
-  ngOnInit() {
+  ngOnInit() { }
 
-  }
-
-Mesas(mw, mh, mcolor, mmarg, mbr) {
-
-
+  Mesas(mw, mh, mcolor, mmarg, mbr) {
 
   const a = document.createElement('div');
   const b = document.getElementById('boxA');
@@ -39,7 +41,6 @@ Mesas(mw, mh, mcolor, mmarg, mbr) {
 
   const removeBtn = document.createElement('div');
   const removeBtnIcon = document.createElement('span');
-
 
   removeBtnIcon.setAttribute('class', 'icon-trash-1');
   removeBtn.setAttribute('class', 'animated bounceIn fast');
@@ -85,7 +86,8 @@ Mesas(mw, mh, mcolor, mmarg, mbr) {
     const getIdRem = document.getElementById(`mesa-${i}`);
     this.moveHandler(getIdRem);
 
-    localStorage.setItem(`lmesa-${i}`, `mesa-${i}`);
+    // localStorage.setItem(`lmesa-${i}`, `mesa-${i}`);
+    this.mesasSave('', `mesa-${i}`, '', '', '', '', i, '', 'Mn', 'Te', 'Br');
 
     document.getElementById(`del-${i}`).addEventListener('click', () => {
       if (getIdRem == null) {
@@ -123,12 +125,54 @@ Mesas(mw, mh, mcolor, mmarg, mbr) {
     // console.log(a.getAttribute('id'));
   });
 
+  
+
 }
 
 // RemoveMesa(a) {
 //   let b = document.getElementById(a).getAttribute('id');
 //   return b;
 // }
+
+mesasSave(Tgn, Cms, PX, PY, SX, SY, NM, TM, Mn, Te, Br) {
+  let objMesa: any = { 
+      TagNameMesa  : Tgn,
+      CodecMesa    : Cms,
+      PosX         : PX,
+      PosY         : PY,
+      SizeX        : SX,
+      SizeY        : SY,
+      NumberMesa   : NM,
+      TexturaMesa  : TM,
+      MeseroName   : Mn,
+      TiempoEspera : Te,
+      BorderRadius : Br
+    }
+
+    this.data.saveDataMesas(objMesa).subscribe( x => console.log(x) );
+    console.log(objMesa);
+}
+
+mesasUpdate(Idm, Tgn, Cms, PX, PY, SX, SY, NM, TM, Mn, Te, Br) {
+  let objMesa: any = {
+    Id           : Idm,
+    TagNameMesa  : Tgn,
+    CodecMesa    : Cms,
+    PosX         : PX,
+    PosY         : PY,
+    SizeX        : SX,
+    SizeY        : SY,
+    NumberMesa   : NM,
+    TexturaMesa  : TM,
+    MeseroName   : Mn,
+    TiempoEspera : Te,
+    BorderRadius : Br
+  }
+
+  this.data.updateMesas(Idm, objMesa).subscribe( y => console.log(y) );
+
+}
+
 
 moveHandler(obj) {
   const position = {x : 0, y : 0};
@@ -142,6 +186,7 @@ moveHandler(obj) {
            top: true
        }, listeners: {
            move(event) {
+
                const target = event.target;
                let x = (parseFloat(target.getAttribute('data-x')) || 0);
                let y = (parseFloat(target.getAttribute('data-y')) || 0);
@@ -149,10 +194,16 @@ moveHandler(obj) {
                // update the element's style
                target.style.width = event.rect.width + 'px';
                target.style.height = event.rect.height + 'px';
-               console.log(target.style.width);
+               
+               let sizeXa = event.rect.width + 'px';
+               let sizeYa = event.rect.height + 'px';
 
+               console.log(sizeXa);
+               console.log(sizeYa);
+              //  console.log('X: ' + this.sizeX);
+              //  console.log('Y: ' + this.sizeY);
+              // translate when resizing from top or left edges
 
-               // translate when resizing from top or left edges
                x += event.deltaRect.left;
                y += event.deltaRect.top;
 
@@ -162,6 +213,7 @@ moveHandler(obj) {
                target.setAttribute('data-x', x);
                target.setAttribute('data-y', y);
               // target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height);
+           
            }
        },
 
@@ -209,8 +261,8 @@ moveHandler(obj) {
        relativePoints: [ { x: 0, y: 0 } ]
      })
   ],
-   });
-}
+  });
+  }
 
 }
 

@@ -10,6 +10,28 @@
     padding: 25px;
 }
 
+#saveMesas {
+    animation: pulse ease 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1, 1);
+    }
+
+    50% {
+        transform: scale(1.25,1.25);
+    }
+
+    100% {
+        transform: scale(1,1);
+    }
+}
+
+#btnSetts {
+    border-radius: 0px !important;
+}
+
 .swal2-modal {
     background-color: #444444 !important;
 }
