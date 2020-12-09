@@ -10,35 +10,64 @@ import { MesasControllerService } from '../Services/mesas-controller.service';
 })
 export class AsignaMesasComponent implements OnInit {
 
+  public ShowSave: boolean = false; 
+
   public heightDiv = (screen.height - 145) + 'px';
   public value = 0 ;
-  public arr = [];
+  // public arr = [];
   public posXm;
   public posYm;
   public SizeX;
   public SizeY;
   public bRadius;
 
+  //#region NGMODEL VARS
+  
+  public NG_TagNameMesa;
+  public NG_CodecMesa;
+  public NG_EscalaX;
+  public NG_EscalaY;
+  public NG_NumberMesa;
+  public NG_TextMesa;
+  public NG_MeseroName;
+  public NG_WaitTime;
+  public NG_BorderRadius;
+  
+  //#endregion
+
+  public mesArr:any = [];
+
   constructor( public data: MesasControllerService ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.getMesasDB();
+    // console.log(this.getMesasDB());
+  }
 
+    //#region funcion que crea MESAS
   Mesas(mw, mh, mcolor, mmarg, mbr) {
 
-  const a = document.createElement('div');
-  const b = document.getElementById('boxA');
+    this.ShowSave = true;
 
-  console.log(this.value);
-  a.setAttribute('class', 'Mesas_Create_Js');
-  a.style.width = mw;
-  a.style.height = mh;
-  a.style.backgroundColor = mcolor;
-  a.style.borderRadius = mbr;
-  a.style.margin = mmarg;
-  b.appendChild(a);
-  this.arr.push(a);
-  console.log(this.arr);
+    //#region param. [MESAS]
+    const a = document.createElement('div'); 
+    const b = document.getElementById('boxA');
 
+    a.setAttribute('class', 'Mesas_Create_Js');
+    a.style.width           = mw;
+    a.style.height          = mh;
+    a.style.backgroundColor = mcolor;
+    a.style.borderRadius    = mbr;
+    a.style.margin          = mmarg;
+    b.appendChild(a);
+    // this.arr.push(a);
+    // console.log(this.arr);
+
+    //#endregion
+
+    // this.mesasSave(this.NG_TagNameMesa, this.NG_CodecMesa, this.NG_EscalaX, this.NG_EscalaY, this.NG_NumberMesa, this.NG_TextMesa, this.NG_MeseroName, this.NG_WaitTime, this.NG_BorderRadius);
+    
+    //#region [BOTON DE REMOVER MESA]
   const removeBtn = document.createElement('div');
   const removeBtnIcon = document.createElement('span');
 
@@ -58,8 +87,9 @@ export class AsignaMesasComponent implements OnInit {
   removeBtn.style.backgroundColor = 'orange';
   removeBtn.style.color = 'white';
   a.appendChild(removeBtn);
+  //#endregion
 
-
+    //#region [BOTON DE MENU]
   const menu = document.createElement('div');
   const menuIcon = document.createElement('span');
   menuIcon.setAttribute('class', 'icon-menu');
@@ -79,37 +109,10 @@ export class AsignaMesasComponent implements OnInit {
   menu.style.backgroundColor = 'whitesmoke';
   menu.style.color = 'gray';
   a.appendChild(menu);
+  //#endregion
 
-  for (let i = 0; i <= this.arr.length; i++) {
-    a.setAttribute('id', `mesa-${i}`);
-    removeBtn.setAttribute('id', `del-${i}`);
-    const getIdRem = document.getElementById(`mesa-${i}`);
-    this.moveHandler(getIdRem);
-
-    // localStorage.setItem(`lmesa-${i}`, `mesa-${i}`);
-    this.mesasSave('', `mesa-${i}`, '', '', '', '', i, '', 'Mn', 'Te', 'Br');
-
-    document.getElementById(`del-${i}`).addEventListener('click', () => {
-      if (getIdRem == null) {
-        return false;
-      } else {
-        const x = getIdRem.getAttribute('id');
-        console.log( x );
-        b.removeChild(getIdRem);
-        localStorage.removeItem(`lmesa-${i}`);
-        Swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: 'Se ha eliminado la mesa!',
-          showConfirmButton: false,
-          timer: 500
-        });
-      }
-    });
-  }
-
+    //#region eventos de mesa para mostrar menu de configuracion e eliminar
   a.addEventListener('mouseover', () => {
-
     // removeBtn.style.transition = 'ease all 0.5s';
     removeBtn.style.display = 'flex';
     menu.style.display = 'flex';
@@ -120,12 +123,11 @@ export class AsignaMesasComponent implements OnInit {
   a.addEventListener('mouseleave', () => {
     // removeBtn.style.transition = 'ease all 0.5s';
     removeBtn.style.display = 'none';
-    menu.style.display = 'none';
+    menu.style.display = 'none';  
     // console.log(removeBtn.getAttribute('id'));
     // console.log(a.getAttribute('id'));
   });
-
-  
+  //#endregion
 
 }
 
@@ -134,136 +136,163 @@ export class AsignaMesasComponent implements OnInit {
 //   return b;
 // }
 
-mesasSave(Tgn, Cms, PX, PY, SX, SY, NM, TM, Mn, Te, Br) {
-  let objMesa: any = { 
-      TagNameMesa  : Tgn,
-      CodecMesa    : Cms,
-      PosX         : PX,
-      PosY         : PY,
-      SizeX        : SX,
-      SizeY        : SY,
-      NumberMesa   : NM,
-      TexturaMesa  : TM,
-      MeseroName   : Mn,
-      TiempoEspera : Te,
-      BorderRadius : Br
+getMesasDB() {
+
+  this.data.getMesasGen().subscribe( resp => {
+    this.mesArr = resp;
+    console.log(this.mesArr);
+
+    for ( let i = 0; i <= this.mesArr.length; i ++) { 
+      this.Mesas(`${this.mesArr[i].sizeX}`, `${this.mesArr[i].sizeX}`, `${this.mesArr[i].texturaMesa}`, '5px', `${this.mesArr[i].borderRadius}`);
+    }
+    
+  });
+  
+}
+
+
+mesasSave(sx, sy, cl, br) {
+
+    let objMesa: any = { 
+      TagNameMesa  : '',
+      CodecMesa    : '',
+      SizeX        : sx,
+      SizeY        : sy,
+      NumberMesa   : 0,
+      TexturaMesa  : cl,
+      MeseroName   : '',
+      TiempoEspera : '',
+      BorderRadius : br
     }
 
-    this.data.saveDataMesas(objMesa).subscribe( x => console.log(x) );
+    this.data.saveDataMesas(objMesa).subscribe( x => console.log('Guardado') );
     console.log(objMesa);
+
 }
 
-mesasUpdate(Idm, Tgn, Cms, PX, PY, SX, SY, NM, TM, Mn, Te, Br) {
+mesasUpdate( id ) {
   let objMesa: any = {
-    Id           : Idm,
-    TagNameMesa  : Tgn,
-    CodecMesa    : Cms,
-    PosX         : PX,
-    PosY         : PY,
-    SizeX        : SX,
-    SizeY        : SY,
-    NumberMesa   : NM,
-    TexturaMesa  : TM,
-    MeseroName   : Mn,
-    TiempoEspera : Te,
-    BorderRadius : Br
+    id: id,
+    tagNameMesa: null,
+    codecMesa: null,
+    posX: 232,
+    posY: 222,
+    sizeX: 155,
+    sizeY: 155,
+    numberMesa: 0,
+    texturaMesa: 'red',
+    meseroName: null,
+    tiempoEspera: null,
+    borderRadius: null    
   }
-
-  this.data.updateMesas(Idm, objMesa).subscribe( y => console.log(y) );
-
+  // console.log('objMesa');
+  this.data.updateMesas(id, objMesa).subscribe( y => {
+    console.log('Update');  
+    console.log(y)
+  } );
 }
 
+//#region 
+// public posit = [];
+// moveHandler(obj) {
+//   let a = document.getElementById(`${obj}`); 
+//   const position = {x : 0, y : 0};
+//   console.log(a);
+//   interact(a).resizable({
+//        // resize from all edges and corners
+//        edges: {
+//            left: false,
+//            right: true,
+//            bottom: true,
+//            top: false
+//        }, listeners: {
+//            move(event) {
 
-moveHandler(obj) {
-  const position = {x : 0, y : 0};
-  interact(obj)
-   .resizable({
-       // resize from all edges and corners
-       edges: {
-           left: true,
-           right: true,
-           bottom: true,
-           top: true
-       }, listeners: {
-           move(event) {
-
-               const target = event.target;
-               let x = (parseFloat(target.getAttribute('data-x')) || 0);
-               let y = (parseFloat(target.getAttribute('data-y')) || 0);
-
-               // update the element's style
-               target.style.width = event.rect.width + 'px';
-               target.style.height = event.rect.height + 'px';
+//                const target = event.target;
+//                let x = (parseFloat(target.getAttribute('data-x')) || 0);
+//                let y = (parseFloat(target.getAttribute('data-y')) || 0);
                
-               let sizeXa = event.rect.width + 'px';
-               let sizeYa = event.rect.height + 'px';
+//                // update the element's style
+//                target.style.width = event.rect.width + 'px';
+//                target.style.height = event.rect.height + 'px';
+               
+//                let sizeXa = event.rect.width + 'px';
+//                let sizeYa = event.rect.height + 'px';
 
-               console.log(sizeXa);
-               console.log(sizeYa);
-              //  console.log('X: ' + this.sizeX);
-              //  console.log('Y: ' + this.sizeY);
-              // translate when resizing from top or left edges
+//                console.log(sizeXa);
+//                console.log(sizeYa);
 
-               x += event.deltaRect.left;
-               y += event.deltaRect.top;
+//               //  console.log('X: ' + this.sizeX);
+//               //  console.log('Y: ' + this.sizeY);
+//               // translate when resizing from top or left edges
 
-               // target.style.webkitTransform = target.style.transform =
-               //     'translate(' + x + 'px,' + y + 'px)';
+//                x += event.deltaRect.left;
+//                y += event.deltaRect.top;
 
-               target.setAttribute('data-x', x);
-               target.setAttribute('data-y', y);
-              // target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height);
+//                // target.style.webkitTransform = target.style.transform =
+//                //     'translate(' + x + 'px,' + y + 'px)';
+
+//                target.setAttribute('data-x', x);
+//                target.setAttribute('data-y', y);
+//               // target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height);
            
-           }
-       },
+//            }
+//        },
 
-       modifiers: [
-           // keep the edges inside the parent
-           interact.modifiers.restrictEdges({
-               outer: 'parent'
-           }),
-           // minimum size
-           interact.modifiers.restrictSize({
-               min: {
-                   width: 50,
-                   height: 50
-               }
-           }),
-           interact.modifiers.snap({
-            targets: [
-              interact.snappers.grid({ x: 10, y: 10 })
-            ],
-            range: Infinity,
-            relativePoints: [ { x: 0, y: 0 } ]
-          })
-       ],
-       inertia: true
-   }).draggable({
-     listeners: {
-       start(event) {
-         console.log(event.type, event.target);
-       },
-       move(event) {
-         position.x += event.dx;
-         position.y += event.dy;
-         event.target.style.transform = `translate(${position.x}px, ` + `${position.y}px)`;
-        //  let posA = position.x;
-        //  let posB = position.y;
+//        modifiers: [
+//            // keep the edges inside the parent
+//            interact.modifiers.restrictEdges({
+//                outer: 'parent'
+//            }),
+//            // minimum size
+//            interact.modifiers.restrictSize({
+//                min: {
+//                    width: 50,
+//                    height: 50
+//                }
+//            }),
+//            interact.modifiers.snap({
+//             targets: [
+//               interact.snappers.grid({ x: 10, y: 10 })
+//             ],
+//             range: Infinity,
+//             relativePoints: [ { x: 0, y: 0 } ]
+//           })
+//        ],
+//        inertia: true
+//    }).draggable({
+//      listeners: {
+//        start(event) {
+//          console.log(event.type, event.target);
+//        },
+//        move(event) {
+//          position.x += event.dx;
+//          position.y += event.dy;
+//          event.target.style.transform = `translate(${position.x}px, ` + `${position.y}px)`; 
+//         // 1| Idm, 2| Tgn, 3| Cms, 4| PX, 5| PY, 6| SX, 7| SY, 8| NM, 9| TM, 10| Mn, 11| Te, 12| Br
+//         // obj.addEventListener('mouseup', () => {
+          
+//         //   // this.mesasUpdate(obj.getAttribute('id'), '', '', '', '', '', '', 0, '', '', '', '');
+//         //   // console.log('Evento detectado');
+//         //   var ma = obj.getAttribute('id');
+//         //   console.log(ma);          
 
-       },
-     },
-     modifiers: [
-      interact.modifiers.snap({
-       targets: [
-         interact.snappers.grid({ x: 30, y: 30 })
-       ],
-       range: Infinity,
-       relativePoints: [ { x: 0, y: 0 } ]
-     })
-  ],
-  });
-  }
+//         // })
+//         // this.position.push(position);
+//        },
+//      },
+//      modifiers: [
+//       interact.modifiers.snap({
+//        targets: [
+//          interact.snappers.grid({ x: 30, y: 30 })
+//        ],
+//        range: Infinity,
+//        relativePoints: [ { x: 0, y: 0 } ]
+//      })
+//   ],
+//   });
+//   }
+//#endregion
 
 }
-
 

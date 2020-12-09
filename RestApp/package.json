@@ -21,6 +21,7 @@
     "@angular/platform-browser": "~8.2.14",
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
+    "@ks89/ngx-drag-n-drop": "^3.0.0",
     "@sweetalert2/themes": "^4.0.1",
     "interactjs": "^1.10.1",
     "rxjs": "~6.4.0",

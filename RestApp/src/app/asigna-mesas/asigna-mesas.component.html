@@ -1,13 +1,18 @@
 <div class="container-fluid p-0" id="contsAll" [ngStyle]="{'height': heightDiv, 'border': 'solid 0.5px gray'}">
 
     <div class="boxA" id="boxA">
-
+        <!-- <div *ngFor="let a of mesArr"
+             [id]="a.id"
+             (click)="moveHandler(a.id)"
+             [ngStyle]="{'height': a.posX + 'px', 'width': a.posY + 'px', 'background-color': a.texturaMesa}" >
+            
+        </div> -->
 
         <div class="btn-settings" style="display: flex;"> 
-            <div class="createMesas" id="btnSetts" (click)="Mesas('100px', '100px', 'blue', '5px', '0%', 1)">
+            <div class="createMesas" id="btnSetts" (click)="Mesas('100px', '100px', 'blue', '5px', '10%', 1)" >
                 <span class="icon-plus-1"></span>
             </div>
-            <div class="createMesas" id="saveMesas" (click)="mesasSave()" style="background-color: #6028bb; font-size: 10pt;" *ngIf="true">
+            <div class="createMesas" id="saveMesas" (click)="mesasSave('100px', '100px', 'blue', '10%')" style="background-color: #6028bb; font-size: 10pt;" >
                 <span class="icon-floppy"></span>
             </div>
         </div>
