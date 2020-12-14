@@ -1,26 +1,191 @@
-<div class="container-fluid p-0" id="contsAll" [ngStyle]="{'height': heightDiv, 'border': 'solid 0.5px gray'}">
+<div class="container-fluid p-0" id="contsAll" [ngStyle]="{'height': heightDiv}">
 
     <div class="boxA" id="boxA">
-        <!-- <div *ngFor="let a of mesArr"
+    <!--<div *ngFor="let a of mesArr"
              [id]="a.id"
              (click)="moveHandler(a.id)"
-             [ngStyle]="{'height': a.posX + 'px', 'width': a.posY + 'px', 'background-color': a.texturaMesa}" >
-            
+             [ngStyle]="{'height': a.posX + 'px', 'width': a.posY + 'px', 'background-color': a.texturaMesa}" >            
         </div> -->
-
-        <div class="btn-settings" style="display: flex;"> 
-            <div class="createMesas" id="btnSetts" (click)="Mesas('100px', '100px', 'blue', '5px', '10%', 1)" >
+        <div class="btn-settings" style="display: flex; ">
+            <div class="createMesas" id="btnSetts"
+                 (click)="mesasSave('100px', '100px', 'blue', '10%', '10')" >
                 <span class="icon-plus-1"></span>
             </div>
-            <div class="createMesas" id="saveMesas" (click)="mesasSave('100px', '100px', 'blue', '10%')" style="background-color: #6028bb; font-size: 10pt;" >
+            <!-- <div class="time" style="margin-left: 25px; display: flex; justify-content: center; align-items: center;">
+                <label for="time" style="margin: 0px !important;"><span class="icon-clock"></span> Tiempo de Mesa: &nbsp;</label> 
+                <input style="width: 50px; border: none; border-bottom: solid 1px gray; background-color: transparent; outline: 0px transparent !important; text-align: center;"
+                       type="number" class="input-control" id="time" [(ngModel)]="NG_WaitTime" name="NG_WaitTime"> min.
+                       <button class="btn btn-info ml-2" (click)="postTime(314, NG_WaitTime)"><span class="icon-ok" ></span>Establecer</button>
+            </div> -->
+            <!-- <div class="createMesas" id="saveMesas" *ngIf="cnS"
+                 (click)="mesasSave('100px', '100px', 'blue', '10%')"
+                 style="background-color: #6028bb; font-size: 10pt;" >
                 <span class="icon-floppy"></span>
+            </div> -->
+        </div>
+    </div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <label for="codecMesero"> <span class="icon-bell-1"></span> Ingresa tu código de Mesero: </label> <br>
+          <input [type]="passwordType" class="inputBgWhite" id="codecMesero" [(ngModel)]="codecMesero" name="codecMesero" >
+          <span class="icon-eye-2" (click)="passwordHidShow()" style="cursor: pointer;"></span>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cerrarMods"> <span class="icon-cancel"></span> Cerrar</button>
+          <button type="button" class="btn btn-primary" (click)="passMesero()"><span class="icon-ok"></span> Asignar mesa</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="boxB">
+        <div class="boxB_a">
+            <div class="boxB_b">
+                <table class="table table-dark">
+                    <thead>
+                      <tr>
+                        <th scope="col">Cod. Mesa</th>
+                        <th scope="col">Mesero</th>
+                        <th scope="col">Tiempo M.</th>
+                        <th scope="col">Update</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="animated  fadeInUp fast" *ngFor="let a of pedProccess" >                        
+                        <th scope="row">{{a.codMesa}}</th>
+                        <td>
+                           {{a.meseroNombre}}
+                        </td>
+                        <td id="td-{{a.codMesa}}">
+                            <span class="icon-clock"></span>
+                            <input type="number"
+                                   class="inptDark"
+                                   style="width: 60px;"
+                                   [value]="a.tiempoEspera">
+                        </td>
+                        <td>
+                            <button class="btn btn-success"
+                                    data-toggle="modal" (click)="asignParametros(a.meseroNombre, a.codMesa)"
+                                    data-target="#exampleModal3">Pedido!
+                            </button>
+                        </td>
+                      </tr>                      
+                    </tbody>
+                  </table>
             </div>
+            <div class="boxB_b">
+               
+            </div>
+        </div>
+        <div class="boxB_a table-warning">
+            <div class="title d-flex justify-content-">
+                <h4>Pedidos en espera:</h4>
+                <span class="icon-question" style="cursor: pointer;"
+                      title="De click al botón comanda para enviarlos">
+                </span>
+            </div>
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th>Cant.   </th>
+                    <th>Platos  </th>
+                    <th>Valor   </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr >
+                    <th scope="row"></th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                  </tr>
+                </tbody>
+              </table>
         </div>
     </div>
 
-    <div class="boxB">
-        <div class="boxB_a"></div>
-        <div class="boxB_a"></div>
-    </div>
-
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+              <strong>Menú</strong><hr>
+              Mesero: {{NG_MeseroName | titlecase }} &nbsp; | &nbsp; Mesa: {{NG_CodecMesa}}
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <ul>
+                <li class="menuList" *ngFor="let a of menuClass"
+                    (click)="getMenuMasterSubClass(a.codigo, a.imgBg, a.nombre, NG_MeseroName, NG_CodecMesa)"
+                    data-toggle="modal" data-target="#exampleModal4"
+                    [ngStyle]="{'background-image': 'url(&quot;' + a.imgBg + '&quot;)'}" >
+                    <p class="noteUp"> {{a.nombre}} </p>
+                </li>
+            </ul>
+        </div>
+        <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click)="ordenar()" >Ordenar!</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+<div class="modal fade" id="exampleModal4" tabindex="-1"
+     role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header" id="modsHeads" [ngStyle]="{'background-image': 'url(&quot;' + imgBgHead + '&quot;)'}"  >
+          <h5 class="modal-title" id="exampleModalLabel">
+              <strong style="text-shadow: 0px 0px 8px rgba(0,0,0,0.5);">{{TitleHead}} / &nbsp;</strong>
+              Mesero: {{NG_MeseroName | titlecase }} &nbsp; | &nbsp; Mesa: {{NG_CodecMesa}}
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+                    <table class="table table-dark">
+                        <thead>
+                          <tr>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Valor</th>
+                            <th scope="col">Cantidad</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let li of PlatosClass">
+                            <td> {{li.nombre}} </td>
+                            <td> $..{{li.valor}} </td>
+                            <td> <input type="number" class="inptDark" [(ngModel)]="cantPlato" name="cantPlato" > </td>
+                          </tr>
+                        </tbody>
+                    </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+              Close
+          </button>
+          <button type="button" class="btn btn-success" (click)="ordenar()" >
+              <span class="icon-ok"></span>Ordenar!
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

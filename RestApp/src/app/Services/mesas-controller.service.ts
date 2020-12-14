@@ -27,4 +27,16 @@ export class MesasControllerService {
     return this.http.get('http://localhost:5000/api/MesasJob/GetMesasGen');
   }
 
+  getOptionsMeseros() {
+    return this.http.get(this.ApiUrlDevelopment + 'GetOptions/');
+  }
+
+  controllMesero(content) {
+    return this.http.post(this.ApiUrlDevelopment + 'PassMeseros', content);
+  }
+
+  getMeseroByIdControl(id) {
+    return this.http.get(this.ApiUrlDevelopment + 'GetMeseroById/' + id);
+  }
+
 }

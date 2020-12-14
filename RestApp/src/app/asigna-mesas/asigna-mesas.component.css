@@ -1,13 +1,21 @@
 .boxA {
     width: 70%;
     height: 100%;
-    border: solid 1px gray;
+    /* border: solid 1px gray; */
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
     flex-shrink: 1;
     overflow-y: auto;
-    padding: 25px;
+    padding: 35px;
+}
+
+.inptDark {
+    background-color: transparent;
+    color: white;
+    outline: none 0px;
+    border: none;
+    border-bottom: solid 1px yellowgreen;
 }
 
 #saveMesas {
@@ -46,12 +54,64 @@
 }
 
 .boxB {
-    width: 350px;
+    width: 500px;
     height: 100%;
-    border: solid 1px red;
+    /* border: solid 1px red; */
     display: flex;
     justify-content: space-between;
     flex-direction: column;
+    
+
+}
+/* 
+.Mesas_Create_Js:hover {
+    transition: ease all 0.5s;
+    background-color: steelblue;
+} */
+
+.menuList {
+    width: 100%;
+    height: 75px;
+    background-color: steelblue;
+    color: white;
+    justify-content: flex-start;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+
+}
+
+ul {
+    padding: 0px !important;
+}
+
+.noteUp {
+    background-color: rgba(0,0,0,0.5);
+    font-size: 15pt;
+    font-weight: bold;
+    padding: 10px;
+    transform: translateX(0px);
+    transition: ease all 1.5s;
+    height: 75px;
+}
+
+.modal-header {
+    background-color: cadetblue !important;
+}
+
+
+#modsHeads {
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    color: white;
+}
+
+.noteUp:hover {
+    background-color: rgba(0,0,0,0.01);    
+    cursor: pointer;
+    text-align: center;
+    transform: translateX(100px);
+    transition: ease all 0.5s;
+    text-shadow: 3px 3px 5px rgba(0,0,0,0.5);
 }
 
 .btn-settings {
@@ -62,9 +122,31 @@
 
 .boxB_a {
     width: 100%;
-    height: 275px;
-    border: solid 1px green;
-    background-color: red;
+    height: 305px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.4);
+    padding: 10px;
+    border-radius: 5px;
+    overflow: auto;
+}
+
+.inputBgWhite {
+    background-color: transparent;
+    padding: 5px;
+    text-align: center;
+    border: none;
+    border-bottom: solid 1px gray;
+    outline: none 0px;
+}
+
+.boxB_a::-webkit-scrollbar {
+    background-color: teal;
+    width: 5px;
+}
+
+.boxB_a::-webkit-scrollbar-thumb {
+    background-color: turquoise;
+    border-radius: 5px;
+    width: 4px;
 }
 
 #contsAll {
